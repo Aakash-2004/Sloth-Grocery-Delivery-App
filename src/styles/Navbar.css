@@ -1,0 +1,145 @@
+.navbar {
+  background-color: var(--white);
+  padding: 1rem 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--shadow);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  transition: var(--transition);
+}
+
+.navbar:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo img {
+  height: 40px;
+  transition: var(--transition);
+}
+
+.logo img:hover {
+  transform: scale(1.05);
+}
+
+.logo h1 {
+  color: var(--primary-color);
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-color);
+  font-weight: 500;
+  transition: var(--transition);
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
+
+.nav-links a:hover {
+  color: var(--primary-color);
+  background-color: var(--light-gray);
+}
+
+/* Account Dropdown Styles */
+.account-dropdown {
+  position: relative;
+}
+
+.account-btn {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.account-btn:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: var(--white);
+  min-width: 200px;
+  box-shadow: var(--shadow);
+  border-radius: 8px;
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 0.8rem 1.5rem;
+  color: var(--text-color);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.dropdown-content a:hover {
+  background-color: var(--light-gray);
+  color: var(--primary-color);
+}
+
+.logout-btn {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.8rem 1.5rem;
+  color: #e74c3c;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.logout-btn:hover {
+  background-color: #ffeeee;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1rem 2%;
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .dropdown-content {
+    right: -50%;
+  }
+} 

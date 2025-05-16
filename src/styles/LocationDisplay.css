@@ -1,0 +1,34 @@
+.location-display {
+  font-size: 0.9rem;
+  color: #555;
+  display: flex;
+  align-items: center;
+  margin-left: 10px;
+}
+
+.location-text, .location-loading, .location-error {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.location-text i, .location-error i {
+  color: var(--primary-color);
+  font-size: 1rem;
+}
+
+.location-loading {
+  font-style: italic;
+  color: #777;
+}
+
+.location-error {
+  color: #e74c3c;
+  cursor: help;
+}
+
+@media (max-width: 768px) {
+  .location-display {
+    display: none;
+  }
+} 
