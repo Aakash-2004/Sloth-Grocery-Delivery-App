@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Profile.css';
+import API_URL from '../config/api';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const Profile = () => {
 
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/users/profile', {
+        const response = await axios.get(`${API_URL}/users/profile`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -88,7 +89,7 @@ const Profile = () => {
     
     try {
       const response = await axios.put(
-        'http://localhost:5000/api/users/profile',
+        `${API_URL}/users/profile`,
         formData,
         {
           headers: {

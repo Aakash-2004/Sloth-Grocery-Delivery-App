@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
+import API_URL from '../config/api';
 
 const EmployeeLogin = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const EmployeeLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5000/api/employees/login', {
+      const response = await fetch(`${API_URL}/employees/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

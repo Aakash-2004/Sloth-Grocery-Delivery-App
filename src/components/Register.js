@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import './Register.css'; // Import the CSS file
+import API_URL from '../config/api';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -40,7 +41,7 @@ const Register = () => {
 
         try {
             setLoading(true);
-            const response = await axios.post('/api/register', {
+            const response = await axios.post(`${API_URL}/register`, {
                 username,
                 email,
                 password
