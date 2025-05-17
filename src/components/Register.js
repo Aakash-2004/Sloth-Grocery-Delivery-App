@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './Register.css'; // Import the CSS file
 import API_URL from '../config/api';
 
 const Register = () => {
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         username: '',
         email: '',
@@ -41,11 +42,15 @@ const Register = () => {
 
         try {
             setLoading(true);
+            console.log('Sending registration request to:', `${API_URL}/register`);
+            
             const response = await axios.post(`${API_URL}/register`, {
                 username,
                 email,
                 password
             });
+            
+            console.log('Registration response:', response);
             
             setSuccess('Registration successful! You can now log in.');
             setFormData({
@@ -54,13 +59,20 @@ const Register = () => {
                 password: '',
                 confirmPassword: ''
             });
-            console.log('Registration successful:', response.data);
+            
+            // Redirect to login after 2 seconds
+            setTimeout(() => {
+                navigate('/login');
+            }, 2000);
+            
         } catch (error) {
+            console.error('Registration error details:', error);
+            
             setError(
                 error.response?.data?.message || 
+                error.message ||
                 'Registration failed. Please try again.'
             );
-            console.error('Error during registration:', error);
         } finally {
             setLoading(false);
         }

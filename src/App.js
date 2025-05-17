@@ -14,11 +14,9 @@ import Register from './components/Register';
 import Profile from './pages/Profile';
 
 // Admin components
-import AdminRoute from './components/AdminRoute';
+import AdminLayout from './components/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import Products from './pages/admin/Products';
-import AddProduct from './pages/admin/AddProduct';
-import EditProduct from './pages/admin/EditProduct';
 
 import './App.css';
 
@@ -72,11 +70,12 @@ function App() {
       <div className="App">
         <Routes>
           {/* Admin Routes */}
-          <Route path="/admin" element={<AdminRoute />}>
+          <Route path="/admin" element={<AdminLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="products" element={<Products />} />
-            <Route path="products/add" element={<AddProduct />} />
-            <Route path="products/edit/:id" element={<EditProduct />} />
+            <Route path="orders" element={<h1>Orders Management</h1>} />
+            <Route path="customers" element={<h1>Customer Management</h1>} />
+            <Route path="settings" element={<h1>Settings</h1>} />
           </Route>
           
           {/* Public/User Routes */}

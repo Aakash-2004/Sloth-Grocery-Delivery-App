@@ -5,8 +5,9 @@ body {
 
 .register-container {
     max-width: 450px;
-    margin: 3rem auto;
-    padding: 2.5rem;
+    width: 94%;
+    margin: 2rem auto;
+    padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     background-color: #fff;
@@ -114,4 +115,35 @@ body {
 
 .login-link a:hover {
     text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 480px) {
+    .register-container {
+        margin: 1rem auto;
+        padding: 1.25rem;
+        width: 90%;
+    }
+
+    .register-container h2 {
+        font-size: 1.5rem;
+    }
+
+    .register-subtitle {
+        font-size: 0.9rem;
+    }
+
+    .form-group label {
+        font-size: 0.95rem;
+    }
+
+    .register-container input {
+        padding: 0.75rem;
+        font-size: 0.95rem;
+    }
+
+    .register-container button {
+        padding: 0.8rem;
+        font-size: 0.95rem;
+    }
 }
