@@ -188,4 +188,119 @@ button {
 img {
   max-width: 100%;
   height: auto;
+}
+
+body.dark-mode {
+  background: linear-gradient(135deg, #181c24 0%, #232a36 100%) !important;
+  color: #f5f7fa !important;
+}
+body.dark-mode .container,
+body.dark-mode .main-content,
+body.dark-mode .hero,
+body.dark-mode .card,
+body.dark-mode .search-bar,
+body.dark-mode .footer,
+body.dark-mode .feature-card,
+body.dark-mode .product-card,
+body.dark-mode .category-card,
+body.dark-mode .section,
+body.dark-mode .trending-products,
+body.dark-mode .why-choose,
+body.dark-mode .shop-by-category,
+body.dark-mode .about-section,
+body.dark-mode .contact-section {
+  background: rgba(35, 42, 54, 0.95) !important;
+  color: #f5f7fa !important;
+  box-shadow: 0 0 16px 2px #2CC99044, 0 8px 32px rgba(44, 201, 144, 0.18), 0 2px 12px rgba(74, 144, 226, 0.10);
+  border: 1.5px solid #2CC990;
+}
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4, body.dark-mode h5, body.dark-mode h6 {
+  color: #2CC990 !important;
+}
+body.dark-mode a {
+  color: #2CC990 !important;
+}
+body.dark-mode a:hover {
+  color: #27ae60 !important;
+}
+body.dark-mode .card h1,
+body.dark-mode .card h2,
+body.dark-mode .card h3,
+body.dark-mode .product-card h3,
+body.dark-mode .feature-card h3,
+body.dark-mode .category-card h3,
+body.dark-mode .section h2,
+body.dark-mode .trending-products h2,
+body.dark-mode .why-choose h2,
+body.dark-mode .footer h2,
+body.dark-mode .about-section h2,
+body.dark-mode .contact-section h2 {
+  color: #2CC990 !important;
+}
+body.dark-mode .card p,
+body.dark-mode .product-card p,
+body.dark-mode .feature-card p,
+body.dark-mode .category-card p,
+body.dark-mode .section p,
+body.dark-mode .trending-products p,
+body.dark-mode .why-choose p,
+body.dark-mode .footer p,
+body.dark-mode .about-section p,
+body.dark-mode .contact-section p {
+  color: #f5f7fa !important;
+}
+body.dark-mode .btn,
+body.dark-mode button,
+body.dark-mode .add-to-cart-btn {
+  background: linear-gradient(135deg, #2CC990 0%, #27ae60 100%) !important;
+  color: #fff !important;
+  border: none;
+}
+body.dark-mode .btn:hover,
+body.dark-mode button:hover,
+body.dark-mode .add-to-cart-btn:hover {
+  background: linear-gradient(135deg, #27ae60 0%, #2CC990 100%) !important;
+  color: #fff !important;
+}
+body.dark-mode .icon,
+body.dark-mode i,
+body.dark-mode .feature-card i {
+  color: #2CC990 !important;
+}
+body.dark-mode .hero {
+  background: linear-gradient(135deg, #181c24 0%, #232a36 100%) !important;
+  color: #f5f7fa !important;
+}
+body.dark-mode .hero .hero-content h1 {
+  color: #2CC990 !important;
+  text-shadow: 0 0 8px #2CC99044;
+}
+body.dark-mode .hero .hero-content p {
+  color: #f5f7fa !important;
+}
+body.dark-mode .hero .search-bar {
+  background: #232a36 !important;
+  border: 1.5px solid #2CC990;
+  box-shadow: 0 0 16px 2px #2CC99044;
+}
+body.dark-mode .hero .search-bar input {
+  background: #181c24 !important;
+  color: #f5f7fa !important;
+  border: none;
+}
+body.dark-mode .hero .search-bar input::placeholder {
+  color: #a0aec0 !important;
+}
+body.dark-mode .hero .search-bar button {
+  background: linear-gradient(135deg, #2CC990 0%, #27ae60 100%) !important;
+  color: #fff !important;
+}
+
+body.dark-mode .App,
+body.dark-mode .main-content,
+body.dark-mode .container {
+  background: linear-gradient(135deg, #181c24 0%, #232a36 100%) !important;
+  color: #f5f7fa !important;
+  box-shadow: 0 0 16px 2px #2CC99044, 0 8px 32px rgba(44, 201, 144, 0.18), 0 2px 12px rgba(74, 144, 226, 0.10);
+  border: 1.5px solid #2CC990;
 } 

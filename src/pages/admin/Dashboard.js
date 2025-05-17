@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+// import API_URL from '../../config/api';
 import '../../styles/AdminDashboard.css';
-import API_URL from '../../config/api';
 
 const Dashboard = () => {
   const [stats, setStats] = useState({

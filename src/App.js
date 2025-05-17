@@ -18,6 +18,8 @@ import AdminLayout from './components/admin/AdminLayout';
 import Dashboard from './pages/admin/Dashboard';
 import Products from './pages/admin/Products';
 
+import GenieChatbot from './components/GenieChatbot';
+
 import './App.css';
 
 function App() {
@@ -109,6 +111,7 @@ function App() {
                 cartItems={cartItems}
                 onRemoveItem={removeFromCart}
               />
+              <GenieChatbot />
             </>
           } />
         </Routes>

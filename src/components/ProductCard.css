@@ -1,0 +1,275 @@
+.product-card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.product-image-container {
+  position: relative;
+  padding-top: 100%; /* 1:1 Aspect Ratio */
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.product-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+.product-badges {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  z-index: 1;
+}
+
+.badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.badge.new {
+  background-color: #2ecc71;
+}
+
+.badge.bestseller {
+  background-color: #f1c40f;
+}
+
+.badge.sale {
+  background-color: #e74c3c;
+}
+
+.badge.discount {
+  background-color: #3498db;
+}
+
+.quick-add-btn {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.95);
+  border: none;
+  font-weight: 600;
+  color: #2c3e50;
+  cursor: pointer;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
+  z-index: 2;
+}
+
+.product-card:hover .quick-add-btn {
+  transform: translateY(0);
+}
+
+.quick-add-btn:disabled {
+  background: rgba(231, 76, 60, 0.95);
+  color: #fff;
+  cursor: not-allowed;
+}
+
+.product-info {
+  padding: 16px;
+}
+
+.product-name {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #2c3e50;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.product-price {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.current-price {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.original-price {
+  font-size: 0.875rem;
+  color: #95a5a6;
+  text-decoration: line-through;
+}
+
+.unit {
+  font-size: 0.875rem;
+  color: #7f8c8d;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.stars {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  color: #f1c40f;
+  font-size: 0.875rem;
+}
+
+.star.filled {
+  color: #f1c40f;
+}
+
+.star.half {
+  color: #f1c40f;
+}
+
+.rating-count {
+  font-size: 0.875rem;
+  color: #7f8c8d;
+}
+
+.low-stock-warning {
+  font-size: 0.875rem;
+  color: #e74c3c;
+  margin-top: 4px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .product-card {
+    border-radius: 8px;
+  }
+
+  .product-info {
+    padding: 12px;
+  }
+
+  .product-name {
+    font-size: 0.95rem;
+  }
+
+  .current-price {
+    font-size: 1.1rem;
+  }
+
+  .quick-add-btn {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .product-badges {
+    top: 8px;
+    left: 8px;
+  }
+
+  .badge {
+    padding: 3px 6px;
+    font-size: 0.7rem;
+  }
+
+  .product-info {
+    padding: 10px;
+  }
+
+  .product-name {
+    font-size: 0.9rem;
+  }
+
+  .current-price {
+    font-size: 1rem;
+  }
+
+  .unit {
+    font-size: 0.8rem;
+  }
+
+  .star {
+    font-size: 0.8rem;
+  }
+
+  .rating-count {
+    font-size: 0.8rem;
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .product-card {
+    background: #1a1a1a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  .product-image-container {
+    background: #2c2c2c;
+  }
+
+  .product-name {
+    color: #ecf0f1;
+  }
+
+  .current-price {
+    color: #ecf0f1;
+  }
+
+  .original-price {
+    color: #95a5a6;
+  }
+
+  .unit {
+    color: #95a5a6;
+  }
+
+  .rating-count {
+    color: #95a5a6;
+  }
+
+  .quick-add-btn {
+    background: rgba(26, 26, 26, 0.95);
+    color: #ecf0f1;
+  }
+
+  .quick-add-btn:disabled {
+    background: rgba(231, 76, 60, 0.95);
+  }
+} 

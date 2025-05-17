@@ -1,0 +1,254 @@
+.genie-chatbot-container {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  z-index: 3000;
+}
+
+.genie-fab {
+  background: linear-gradient(135deg, #4A90E2 60%, #2CC990 100%);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  font-size: 2.2rem;
+  box-shadow: 0 8px 32px rgba(74, 144, 226, 0.25), 0 1.5px 8px rgba(44, 201, 144, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow 0.3s, background 0.3s, transform 0.2s;
+  animation: genie-float 2.5s infinite alternate;
+  padding: 0;
+}
+.genie-fab:hover {
+  background: linear-gradient(135deg, #2CC990 60%, #4A90E2 100%);
+  transform: scale(1.08) rotate(-2deg);
+  box-shadow: 0 12px 36px rgba(44, 201, 144, 0.25), 0 2px 12px rgba(74, 144, 226, 0.18);
+}
+.genie-fab-inner {
+  background: rgba(255,255,255,0.18);
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(44,201,144,0.10);
+}
+.genie-fab i {
+  font-size: 2rem;
+  color: #fff;
+}
+
+@keyframes genie-float {
+  0% { transform: translateY(0) scale(1); }
+  100% { transform: translateY(-10px) scale(1.04); }
+}
+
+.genie-chatbot-window {
+  width: 370px;
+  max-width: 95vw;
+  height: 500px;
+  background: rgba(255,255,255,0.85);
+  border-radius: 24px;
+  box-shadow: 0 12px 48px rgba(74, 144, 226, 0.18), 0 2px 12px rgba(44, 201, 144, 0.10);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: absolute;
+  bottom: 80px;
+  right: 0;
+  animation: fadeInUp 0.4s cubic-bezier(.23,1.01,.32,1) both;
+  backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(74,144,226,0.12);
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.genie-header {
+  background: linear-gradient(135deg, #4A90E2 60%, #2CC990 100%);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.08);
+}
+.genie-avatar-outer {
+  background: linear-gradient(135deg, #4A90E2 60%, #2CC990 100%);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(44,201,144,0.10);
+  margin-right: 0.7rem;
+}
+.genie-avatar {
+  font-size: 1.3rem;
+  color: #fff;
+}
+.genie-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  transition: color 0.2s;
+}
+.genie-close:hover {
+  color: #ff6b6b;
+}
+
+.genie-messages {
+  flex: 1;
+  padding: 1.2rem 1rem 0.5rem 1rem;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #f8fafc 60%, #e0e7ef 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.genie-msg {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.genie-msg.user {
+  align-items: flex-end;
+}
+
+.msg-bubble {
+  max-width: 80%;
+  padding: 0.8rem 1.1rem;
+  border-radius: 18px 18px 6px 18px;
+  background: #e6f7ff;
+  color: #222;
+  font-size: 1rem;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.08);
+  margin-bottom: 0.2rem;
+  position: relative;
+  word-break: break-word;
+  animation: fadeIn 0.3s;
+}
+.genie-msg.user .msg-bubble {
+  background: linear-gradient(135deg, #4A90E2 60%, #2CC990 100%);
+  color: #fff;
+  border-radius: 18px 18px 18px 6px;
+  align-self: flex-end;
+}
+.genie-msg.genie .msg-bubble {
+  background: #fffbe6;
+  color: #222;
+  border-radius: 18px 18px 6px 18px;
+  align-self: flex-start;
+  box-shadow: 0 2px 8px rgba(44, 201, 144, 0.08);
+}
+
+.msg-time {
+  display: block;
+  font-size: 0.75rem;
+  color: #aaa;
+  margin-top: 0.2rem;
+  text-align: right;
+}
+
+.genie-input-bar {
+  display: flex;
+  align-items: center;
+  padding: 0.7rem 1rem;
+  background: #f8fafc;
+  border-top: 1px solid #e0e0e0;
+  gap: 0.5rem;
+}
+.genie-input-bar input {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border-radius: 20px;
+  border: 1px solid #e0e0e0;
+  font-size: 1rem;
+  outline: none;
+  background: #fff;
+  transition: border 0.2s;
+}
+.genie-input-bar input:focus {
+  border: 1.5px solid #4A90E2;
+}
+.genie-input-bar button {
+  background: linear-gradient(135deg, #4A90E2 60%, #2CC990 100%);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+.genie-input-bar button:hover {
+  background: linear-gradient(135deg, #2CC990 60%, #4A90E2 100%);
+  transform: scale(1.08);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Dark mode support */
+body.dark-mode .genie-chatbot-window {
+  background: #232a36;
+  box-shadow: 0 12px 48px rgba(44, 201, 144, 0.18), 0 2px 12px rgba(74, 144, 226, 0.10);
+}
+body.dark-mode .genie-header {
+  background: linear-gradient(135deg, #232a36 60%, #2CC990 100%);
+  color: #fff;
+}
+body.dark-mode .genie-messages {
+  background: linear-gradient(135deg, #232a36 60%, #181c24 100%);
+}
+body.dark-mode .msg-bubble {
+  background: #232a36;
+  color: #f5f7fa;
+}
+body.dark-mode .genie-msg.user .msg-bubble {
+  background: linear-gradient(135deg, #2CC990 60%, #4A90E2 100%);
+  color: #fff;
+}
+body.dark-mode .genie-msg.genie .msg-bubble {
+  background: #232a36;
+  color: #2CC990;
+}
+body.dark-mode .genie-input-bar {
+  background: #181c24;
+  border-top: 1px solid #232a36;
+}
+body.dark-mode .genie-input-bar input {
+  background: #232a36;
+  color: #f5f7fa;
+  border: 1px solid #2CC990;
+}
+body.dark-mode .genie-input-bar input:focus {
+  border: 1.5px solid #2CC990;
+}
+body.dark-mode .genie-input-bar button {
+  background: linear-gradient(135deg, #232a36 60%, #2CC990 100%);
+  color: #fff;
+}
+body.dark-mode .genie-input-bar button:hover {
+  background: linear-gradient(135deg, #2CC990 60%, #232a36 100%);
+} 

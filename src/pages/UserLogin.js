@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/Login.css';
 import API_URL from '../config/api';
 
@@ -10,16 +10,38 @@ const UserLogin = ({ onLoginSuccess }) => {
     password: ''
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem('theme') === 'dark';
+  });
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add('dark-mode');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      document.body.classList.remove('dark-mode');
+      localStorage.setItem('theme', 'light');
+    }
+  }, [darkMode]);
+
+  const handleThemeToggle = () => {
+    setDarkMode(prev => !prev);
+  };
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError('');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+
     try {
       const response = await fetch(`${API_URL}/users/login`, {
         method: 'POST',
@@ -35,54 +57,114 @@ const UserLogin = ({ onLoginSuccess }) => {
         localStorage.setItem('userToken', data.token);
         localStorage.setItem('userRole', 'user');
         
-        // Pass user data to parent component
         if (onLoginSuccess) {
           onLoginSuccess(data.user);
         }
         
         navigate('/');
       } else {
-        setError(data.message || 'Login failed');
+        setError(data.message || 'Login failed. Please check your credentials.');
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
       console.error('Login error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h2>User Login</h2>
-        {error && <div className="error-message">{error}</div>}
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
+    <div className="login-page">
+      <div className="login-container">
+        <button 
+          className="theme-toggle-btn" 
+          onClick={handleThemeToggle} 
+          aria-label="Toggle dark mode"
+        >
+          {darkMode ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
+        </button>
+
+        <div className="login-box">
+          <div className="login-header">
+            <h1>Welcome Back</h1>
+            <p>Sign in to your Sloth account</p>
           </div>
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-            />
+
+          {error && (
+            <div className="login-error">
+              <i className="fas fa-exclamation-circle"></i>
+              <span>{error}</span>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="login-form">
+            <div className="form-group">
+              <label htmlFor="email">Email</label>
+              <div className="input-group">
+                <i className="fas fa-envelope"></i>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="password">Password</label>
+              <div className="input-group">
+                <i className="fas fa-lock"></i>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-options">
+              <label className="remember-me">
+                <input type="checkbox" />
+                <span>Remember me</span>
+              </label>
+              <Link to="/forgot-password" className="forgot-password">
+                Forgot Password?
+              </Link>
+            </div>
+
+            <button 
+              type="submit" 
+              className={`login-btn ${loading ? 'loading' : ''}`}
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <span className="spinner"></span>
+                  Signing in...
+                </>
+              ) : (
+                'Sign In'
+              )}
+            </button>
+          </form>
+
+          <div className="login-footer">
+            <p>
+              Don't have an account?{' '}
+              <Link to="/register" className="register-link">
+                Create Account
+              </Link>
+            </p>
           </div>
-          <button type="submit" className="login-btn">Login</button>
-        </form>
-        <p className="register-link">
-          Don't have an account? <a href="/register">Register here</a>
-        </p>
+        </div>
       </div>
     </div>
   );
