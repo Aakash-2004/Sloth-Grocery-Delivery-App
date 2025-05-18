@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaShoppingCart, FaHeart, FaStar } from 'react-icons/fa';
+import API_URL from '../config/api';
 import './ProductGrid.css';
 
 const ProductGrid = ({ products, loading, error, onAddToCart, onAddToWishlist }) => {
@@ -50,7 +51,10 @@ const ProductGrid = ({ products, loading, error, onAddToCart, onAddToWishlist })
         <div key={product._id} className="product-card">
           <Link to={`/product/${product._id}`} className="product-image-link">
             <div className="product-image">
-              <img src={product.images[0]} alt={product.name} />
+              <img 
+                src={product.image ? `${API_URL}${product.image}` : '/placeholder-product.jpg'} 
+                alt={product.name} 
+              />
               {product.discount > 0 && (
                 <span className="discount-badge">-{product.discount}%</span>
               )}
@@ -63,13 +67,13 @@ const ProductGrid = ({ products, loading, error, onAddToCart, onAddToWishlist })
             </Link>
             
             <div className="product-category">
-              {product.category.name}
+              {product.category}
             </div>
             
             <div className="product-rating">
               <FaStar className="star-icon" />
-              <span>{product.rating.toFixed(1)}</span>
-              <span className="rating-count">({product.reviewCount})</span>
+              <span>{product.ratings?.average?.toFixed(1) || '0.0'}</span>
+              <span className="rating-count">({product.ratings?.count || 0})</span>
             </div>
             
             <div className="product-price">
@@ -85,28 +89,21 @@ const ProductGrid = ({ products, loading, error, onAddToCart, onAddToWishlist })
               )}
             </div>
             
-            <div className="product-actions">
-              <button
-                className="add-to-cart-btn"
-                onClick={() => onAddToCart(product)}
-                disabled={!product.inStock}
-              >
-                <FaShoppingCart />
-                {product.inStock ? 'Add to Cart' : 'Out of Stock'}
-              </button>
-              
-              <button
-                className="wishlist-btn"
-                onClick={() => onAddToWishlist(product)}
-                title="Add to Wishlist"
-              >
-                <FaHeart />
-              </button>
-            </div>
+            <button 
+              className="add-to-cart-btn"
+              onClick={() => onAddToCart(product)}
+              disabled={product.stock?.available <= 0}
+            >
+              <FaShoppingCart />
+              {product.stock?.available > 0 ? 'Add to Cart' : 'Out of Stock'}
+            </button>
             
-            {!product.inStock && (
-              <div className="out-of-stock-badge">Out of Stock</div>
-            )}
+            <button 
+              className="add-to-wishlist-btn"
+              onClick={() => onAddToWishlist(product)}
+            >
+              <FaHeart />
+            </button>
           </div>
         </div>
       ))}

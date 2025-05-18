@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
-// import axios from 'axios';
-// import API_URL from '../../config/api';
+import React, { useState, useEffect, useCallback } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import API_URL from '../../config/api';
 import '../../styles/AdminProducts.css';
 
 const Products = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -22,46 +24,31 @@ const Products = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
 
-  // Fetch products on component mount
-  useEffect(() => {
-    fetchProducts();
-  }, []);
-
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem('userToken');
-      if (!token) return;
+      if (!token) {
+        navigate('/login');
+        return;
+      }
 
-      // In production, fetch from actual API
-      // const response = await axios.get(`${API_URL}/products`, {
-      //   headers: { Authorization: `Bearer ${token}` }
-      // });
+      const response = await axios.get(`${API_URL}/products`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-      // Mock data for demonstration
-      const mockProducts = [
-        { id: '1', name: 'Fresh Apples', description: 'Organic fresh apples', price: 2.99, category: 'Fruits', stock: 100, image: 'apple.jpg' },
-        { id: '2', name: 'Whole Milk', description: 'Farm fresh milk', price: 3.49, category: 'Dairy', stock: 50, image: 'milk.jpg' },
-        { id: '3', name: 'Brown Bread', description: 'Freshly baked brown bread', price: 2.49, category: 'Bakery', stock: 30, image: 'bread.jpg' },
-        { id: '4', name: 'Chicken Breast', description: 'Boneless chicken breast', price: 5.99, category: 'Meat', stock: 25, image: 'chicken.jpg' },
-        { id: '5', name: 'Spinach', description: 'Fresh spinach leaves', price: 1.99, category: 'Vegetables', stock: 40, image: 'spinach.jpg' },
-        { id: '6', name: 'Orange Juice', description: '100% natural orange juice', price: 3.99, category: 'Beverages', stock: 45, image: 'juice.jpg' },
-        { id: '7', name: 'Greek Yogurt', description: 'Creamy Greek yogurt', price: 4.49, category: 'Dairy', stock: 35, image: 'yogurt.jpg' },
-        { id: '8', name: 'Pasta', description: 'Italian pasta', price: 1.79, category: 'Grains', stock: 70, image: 'pasta.jpg' },
-        { id: '9', name: 'Tomatoes', description: 'Vine ripened tomatoes', price: 2.29, category: 'Vegetables', stock: 60, image: 'tomatoes.jpg' },
-        { id: '10', name: 'Cereal', description: 'Healthy breakfast cereal', price: 4.99, category: 'Breakfast', stock: 40, image: 'cereal.jpg' },
-        { id: '11', name: 'Bananas', description: 'Fresh bananas', price: 1.49, category: 'Fruits', stock: 80, image: 'bananas.jpg' },
-        { id: '12', name: 'Eggs', description: 'Free-range eggs', price: 3.99, category: 'Dairy', stock: 60, image: 'eggs.jpg' }
-      ];
-
-      setProducts(mockProducts);
+      setProducts(response.data.products || []);
       setLoading(false);
     } catch (err) {
       console.error('Error fetching products:', err);
       setError('Failed to load products');
       setLoading(false);
     }
-  };
+  }, [navigate]);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   // Handle form input changes
   const handleChange = (e) => {
@@ -95,40 +82,39 @@ const Products = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('userToken');
-      if (!token) return;
+      if (!token) {
+        navigate('/login');
+        return;
+      }
 
       const formDataToSend = new FormData();
       Object.keys(formData).forEach(key => {
-        formDataToSend.append(key, formData[key]);
+        if (formData[key] !== null) {
+          formDataToSend.append(key, formData[key]);
+        }
       });
 
       if (editingProduct) {
-        // In production, update via API
-        // await axios.put(`${API_URL}/products/${editingProduct.id}`, formDataToSend, {
-        //   headers: { Authorization: `Bearer ${token}` }
-        // });
-        
-        // Mock update for demonstration
-        const updatedProducts = products.map(p => 
-          p.id === editingProduct.id ? { ...p, ...formData, image: formData.image ? URL.createObjectURL(formData.image) : p.image } : p
-        );
-        setProducts(updatedProducts);
+        // Update existing product
+        await axios.put(`${API_URL}/products/${editingProduct._id}`, formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
       } else {
-        // In production, create via API
-        // const response = await axios.post(`${API_URL}/products`, formDataToSend, {
-        //   headers: { Authorization: `Bearer ${token}` }
-        // });
-        
-        // Mock create for demonstration
-        const newProduct = {
-          id: Date.now().toString(),
-          ...formData,
-          image: formData.image ? URL.createObjectURL(formData.image) : null
-        };
-        setProducts([...products, newProduct]);
+        // Create new product
+        await axios.post(`${API_URL}/products`, formDataToSend, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data'
+          }
+        });
       }
 
-      // Reset form and state
+      // Reset form and refresh products
+      setShowForm(false);
+      setEditingProduct(null);
       setFormData({
         name: '',
         description: '',
@@ -138,8 +124,7 @@ const Products = () => {
         image: null
       });
       setImagePreview(null);
-      setEditingProduct(null);
-      setShowForm(false);
+      fetchProducts();
     } catch (err) {
       console.error('Error saving product:', err);
       setError('Failed to save product');
@@ -157,7 +142,7 @@ const Products = () => {
       stock: product.stock,
       image: null
     });
-    setImagePreview(product.image.startsWith('http') ? product.image : null);
+    setImagePreview(product.image);
     setShowForm(true);
   };
 
@@ -167,16 +152,17 @@ const Products = () => {
     
     try {
       const token = localStorage.getItem('userToken');
-      if (!token) return;
+      if (!token) {
+        navigate('/login');
+        return;
+      }
 
-      // In production, delete via API
-      // await axios.delete(`${API_URL}/products/${id}`, {
-      //   headers: { Authorization: `Bearer ${token}` }
-      // });
+      await axios.delete(`${API_URL}/products/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
 
-      // Mock delete for demonstration
-      const filteredProducts = products.filter(p => p.id !== id);
-      setProducts(filteredProducts);
+      // Refresh products list
+      fetchProducts();
     } catch (err) {
       console.error('Error deleting product:', err);
       setError('Failed to delete product');
@@ -231,7 +217,102 @@ const Products = () => {
         </button>
       </div>
       
-      {!showForm ? (
+      {showForm ? (
+        <form onSubmit={handleSubmit} className="product-form">
+          <div className="form-group">
+            <label htmlFor="name">Product Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="description">Description</label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label htmlFor="price">Price (₹)</label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                step="0.01"
+                min="0.01"
+                required
+              />
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="category">Category</label>
+              <select
+                id="category"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Category</option>
+                <option value="fruits-vegetables">Fruits & Vegetables</option>
+                <option value="dairy-bakery">Dairy & Bakery</option>
+                <option value="beverages">Beverages</option>
+                <option value="snacks">Snacks</option>
+                <option value="household">Household</option>
+              </select>
+            </div>
+            
+            <div className="form-group">
+              <label htmlFor="stock">Stock</label>
+              <input
+                type="number"
+                id="stock"
+                name="stock"
+                value={formData.stock}
+                onChange={handleChange}
+                min="0"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="image">Product Image</label>
+            <input
+              type="file"
+              id="image"
+              name="image"
+              onChange={handleImageChange}
+              accept="image/*"
+              required={!editingProduct}
+            />
+            {imagePreview && (
+              <div className="image-preview">
+                <img src={imagePreview} alt="Preview" />
+              </div>
+            )}
+          </div>
+
+          <div className="form-actions">
+            <button type="submit" className="submit-btn">
+              {editingProduct ? 'Update Product' : 'Add Product'}
+            </button>
+          </div>
+        </form>
+      ) : (
         <>
           <div className="products-search">
             <input
@@ -242,7 +323,7 @@ const Products = () => {
             />
           </div>
           
-          <div className="table-responsive">
+          <div className="products-table-container">
             <table className="products-table">
               <thead>
                 <tr>
@@ -256,11 +337,11 @@ const Products = () => {
               </thead>
               <tbody>
                 {currentItems.map(product => (
-                  <tr key={product.id}>
+                  <tr key={product._id}>
                     <td>
                       <div className="product-image">
                         {product.image ? (
-                          <img src={product.image.startsWith('http') ? product.image : `/images/products/${product.image}`} alt={product.name} />
+                          <img src={product.image} alt={product.name} />
                         ) : (
                           <div className="no-image">No Image</div>
                         )}
@@ -268,13 +349,13 @@ const Products = () => {
                     </td>
                     <td>{product.name}</td>
                     <td>{product.category}</td>
-                    <td>${product.price}</td>
+                    <td>₹{product.price}</td>
                     <td>{product.stock}</td>
                     <td className="action-column">
                       <button className="edit-btn" onClick={() => handleEdit(product)}>
                         <i className="fas fa-edit"></i>
                       </button>
-                      <button className="delete-btn" onClick={() => handleDelete(product.id)}>
+                      <button className="delete-btn" onClick={() => handleDelete(product._id)}>
                         <i className="fas fa-trash-alt"></i>
                       </button>
                     </td>
@@ -287,145 +368,18 @@ const Products = () => {
           {/* Pagination */}
           {pageNumbers.length > 1 && (
             <div className="pagination">
-              <button
-                className={`pagination-btn ${currentPage === 1 ? 'disabled' : ''}`}
-                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <i className="fas fa-chevron-left"></i>
-              </button>
-              
               {pageNumbers.map(number => (
                 <button
                   key={number}
-                  className={`pagination-btn ${currentPage === number ? 'active' : ''}`}
                   onClick={() => paginate(number)}
+                  className={`page-btn ${currentPage === number ? 'active' : ''}`}
                 >
                   {number}
                 </button>
               ))}
-              
-              <button
-                className={`pagination-btn ${currentPage === pageNumbers.length ? 'disabled' : ''}`}
-                onClick={() => currentPage < pageNumbers.length && paginate(currentPage + 1)}
-                disabled={currentPage === pageNumbers.length}
-              >
-                <i className="fas fa-chevron-right"></i>
-              </button>
             </div>
           )}
         </>
-      ) : (
-        <div className="product-form-container">
-          <h2>{editingProduct ? 'Edit Product' : 'Add New Product'}</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="form-group">
-              <label htmlFor="name">Product Name</label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                rows="3"
-                required
-              ></textarea>
-            </div>
-            
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="price">Price ($)</label>
-                <input
-                  type="number"
-                  id="price"
-                  name="price"
-                  value={formData.price}
-                  onChange={handleChange}
-                  step="0.01"
-                  min="0.01"
-                  required
-                />
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="category">Category</label>
-                <select
-                  id="category"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Select Category</option>
-                  <option value="Fruits">Fruits</option>
-                  <option value="Vegetables">Vegetables</option>
-                  <option value="Dairy">Dairy</option>
-                  <option value="Meat">Meat</option>
-                  <option value="Bakery">Bakery</option>
-                  <option value="Beverages">Beverages</option>
-                  <option value="Grains">Grains</option>
-                  <option value="Breakfast">Breakfast</option>
-                </select>
-              </div>
-              
-              <div className="form-group">
-                <label htmlFor="stock">Stock</label>
-                <input
-                  type="number"
-                  id="stock"
-                  name="stock"
-                  value={formData.stock}
-                  onChange={handleChange}
-                  min="0"
-                  required
-                />
-              </div>
-            </div>
-            
-            <div className="form-group">
-              <label htmlFor="image">Product Image</label>
-              <input
-                type="file"
-                id="image"
-                name="image"
-                onChange={handleImageChange}
-                accept="image/*"
-              />
-              {imagePreview && (
-                <div className="image-preview">
-                  <img src={imagePreview} alt="Product Preview" />
-                </div>
-              )}
-            </div>
-            
-            <div className="form-actions">
-              <button type="submit" className="submit-btn">
-                {editingProduct ? 'Update Product' : 'Add Product'}
-              </button>
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={() => {
-                  setShowForm(false);
-                  setEditingProduct(null);
-                }}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
       )}
     </div>
   );

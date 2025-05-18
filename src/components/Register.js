@@ -38,11 +38,32 @@ const Register = () => {
         if (Object.keys(errs).length) return setErrors(errs);
         setLoading(true);
         setSuccess('');
-        setTimeout(() => {
+        setErrors({});
+
+        try {
+            const response = await axios.post(`${API_URL}/register`, {
+                username: form.username,
+                email: form.email,
+                password: form.password,
+                phone: form.phone
+            });
+
+            if (response.data.token) {
+                localStorage.setItem('userToken', response.data.token);
+                setSuccess('Account created successfully! Redirecting...');
+                setTimeout(() => {
+                    navigate('/');
+                }, 1500);
+            }
+        } catch (error) {
+            if (error.response?.data?.errors) {
+                setErrors(error.response.data.errors);
+            } else {
+                setErrors({ submit: error.response?.data?.message || 'Registration failed. Please try again.' });
+            }
+        } finally {
             setLoading(false);
-            setSuccess('Account created! You can now log in.');
-            setForm({ username: '', email: '', password: '', confirmPassword: '', phone: '' });
-        }, 1200);
+        }
     };
 
     return (

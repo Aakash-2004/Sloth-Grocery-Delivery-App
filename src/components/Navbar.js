@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Navbar.css';
 import logo from '../assets/logo.png';
@@ -6,19 +6,6 @@ import LocationDisplay from './LocationDisplay';
 
 const Navbar = ({ onCartClick, isAuthenticated, user, onLogout }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [darkMode, setDarkMode] = useState(() => {
-    return localStorage.getItem('theme') === 'dark';
-  });
-
-  useEffect(() => {
-    if (darkMode) {
-      document.body.classList.add('dark-mode');
-      localStorage.setItem('theme', 'dark');
-    } else {
-      document.body.classList.remove('dark-mode');
-      localStorage.setItem('theme', 'light');
-    }
-  }, [darkMode]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -29,10 +16,6 @@ const Navbar = ({ onCartClick, isAuthenticated, user, onLogout }) => {
       onLogout();
     }
     setIsDropdownOpen(false);
-  };
-
-  const handleThemeToggle = () => {
-    setDarkMode((prev) => !prev);
   };
 
   return (
@@ -71,13 +54,6 @@ const Navbar = ({ onCartClick, isAuthenticated, user, onLogout }) => {
             </div>
           )}
         </div>
-        <button 
-          className="theme-toggle-btn" 
-          onClick={handleThemeToggle} 
-          aria-label="Toggle dark mode"
-        >
-          {darkMode ? <i className="fas fa-sun"></i> : <i className="fas fa-moon"></i>}
-        </button>
         <button className="cart-btn" onClick={onCartClick} aria-label="Cart">
           <i className="fas fa-shopping-cart"></i>
         </button>

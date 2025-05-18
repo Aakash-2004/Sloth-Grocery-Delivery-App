@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaStar, FaRegStar, FaStarHalfAlt } from 'react-icons/fa';
 import { useCart } from '../contexts/CartContext';
+import API_URL from '../config/api';
 import './ProductCard.css';
 
 const ProductCard = ({ product }) => {
@@ -10,7 +11,7 @@ const ProductCard = ({ product }) => {
     _id,
     name,
     slug,
-    images,
+    image,
     price,
     compareAtPrice,
     discount,
@@ -57,8 +58,8 @@ const ProductCard = ({ product }) => {
     <Link to={`/product/${slug || _id}`} className="product-card">
       <div className="product-image-container">
         <img
-          src={images[0]?.url || '/placeholder-product.jpg'}
-          alt={images[0]?.alt || name}
+          src={image ? `${API_URL}${image}` : '/placeholder-product.jpg'}
+          alt={name}
           className="product-image"
         />
         
@@ -76,9 +77,9 @@ const ProductCard = ({ product }) => {
         <button
           className="quick-add-btn"
           onClick={handleAddToCart}
-          disabled={stock.available <= 0}
+          disabled={stock?.available <= 0}
         >
-          {stock.available > 0 ? 'Add to Cart' : 'Out of Stock'}
+          {stock?.available > 0 ? 'Add to Cart' : 'Out of Stock'}
         </button>
       </div>
 
@@ -97,7 +98,7 @@ const ProductCard = ({ product }) => {
           <span className="unit">/{unit}</span>
         </div>
 
-        {ratings.count > 0 && (
+        {ratings?.count > 0 && (
           <div className="product-rating">
             <div className="stars">
               {renderStars(ratings.average)}
@@ -106,7 +107,7 @@ const ProductCard = ({ product }) => {
           </div>
         )}
 
-        {stock.available <= stock.lowStockThreshold && stock.available > 0 && (
+        {stock?.available <= stock?.lowStockThreshold && stock?.available > 0 && (
           <div className="low-stock-warning">
             Only {stock.available} left in stock
           </div>

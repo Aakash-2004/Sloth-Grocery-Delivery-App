@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Features from './components/Features';
@@ -12,14 +12,21 @@ import UserLogin from './pages/UserLogin';
 import EmployeeLogin from './pages/EmployeeLogin';
 import Register from './components/Register';
 import Profile from './pages/Profile';
+import Products from './pages/Products';
+import Orders from './pages/Orders';
+import Contact from './pages/Contact';
+import About from './pages/About';
 
 // Admin components
 import AdminLayout from './components/admin/AdminLayout';
+import AdminRoute from './components/AdminRoute';
 import Dashboard from './pages/admin/Dashboard';
-import Products from './pages/admin/Products';
+import AdminProducts from './pages/admin/Products';
+import AdminOrders from './pages/admin/Orders';
+import AdminCustomers from './pages/admin/Customers';
+import AdminSettings from './pages/admin/Settings';
 
 import GenieChatbot from './components/GenieChatbot';
-
 import './App.css';
 
 function App() {
@@ -67,17 +74,28 @@ function App() {
     localStorage.removeItem('userRole');
   };
 
+  // Protected Route component
+  const ProtectedRoute = ({ children }) => {
+    if (!isAuthenticated) {
+      return <Navigate to="/login" />;
+    }
+    return children;
+  };
+
   return (
     <Router>
       <div className="App">
         <Routes>
           {/* Admin Routes */}
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="products" element={<Products />} />
-            <Route path="orders" element={<h1>Orders Management</h1>} />
-            <Route path="customers" element={<h1>Customer Management</h1>} />
-            <Route path="settings" element={<h1>Settings</h1>} />
+          <Route element={<AdminRoute />}>
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<Navigate to="dashboard" replace />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="products" element={<AdminProducts />} />
+              <Route path="orders" element={<AdminOrders />} />
+              <Route path="customers" element={<AdminCustomers />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
           </Route>
           
           {/* Public/User Routes */}
@@ -99,10 +117,30 @@ function App() {
                     <AppFeatures />
                   </>
                 } />
-                <Route path="/login" element={<UserLogin onLoginSuccess={handleLogin} />} />
-                <Route path="/employee/login" element={<EmployeeLogin />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/profile" element={<Profile />} />
+                <Route path="/login" element={
+                  !isAuthenticated ? <UserLogin onLoginSuccess={handleLogin} /> : <Navigate to="/" />
+                } />
+                <Route path="/employee/login" element={
+                  !isAuthenticated ? <EmployeeLogin /> : <Navigate to="/" />
+                } />
+                <Route path="/register" element={
+                  !isAuthenticated ? <Register /> : <Navigate to="/" />
+                } />
+                <Route path="/products" element={<Products />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                
+                {/* Protected User Routes */}
+                <Route path="/profile" element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                } />
+                <Route path="/orders" element={
+                  <ProtectedRoute>
+                    <Orders />
+                  </ProtectedRoute>
+                } />
               </Routes>
               <Footer />
               <CartModal 

@@ -1,169 +1,173 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../styles/Orders.css';
+import './Orders.css';
 import API_URL from '../config/api';
 
 const Orders = () => {
-  const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [filter, setFilter] = useState('all'); // all, processing, delivered, cancelled
+  const [selectedOrder, setSelectedOrder] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('userToken');
-    if (!token) {
-      navigate('/login');
-      return;
-    }
-
-    const fetchOrders = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/orders`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setOrders(response.data);
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching orders:', err);
-        setError('Failed to load orders. Please try again.');
-        setLoading(false);
-        
-        if (err.response?.status === 401) {
-          localStorage.removeItem('userToken');
-          localStorage.removeItem('userData');
-          navigate('/login');
-        }
-      }
-    };
-
     fetchOrders();
-  }, [navigate]);
+  }, []);
 
-  const getStatusClass = (status) => {
-    switch(status.toLowerCase()) {
-      case 'delivered': return 'status-delivered';
-      case 'processing': return 'status-processing';
-      case 'shipped': return 'status-shipped';
-      case 'cancelled': return 'status-cancelled';
-      default: return '';
+  const fetchOrders = async () => {
+    try {
+      const token = localStorage.getItem('userToken');
+      const response = await axios.get(`${API_URL}/orders`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setOrders(response.data);
+      setLoading(false);
+    } catch (err) {
+      setError('Failed to fetch orders. Please try again later.');
+      setLoading(false);
     }
   };
 
-  const filteredOrders = orders.filter(order => {
-    if (filter === 'all') return true;
-    return order.status.toLowerCase() === filter;
-  });
+  const getStatusColor = (status) => {
+    switch (status.toLowerCase()) {
+      case 'delivered':
+        return '#2ecc71';
+      case 'processing':
+        return '#3498db';
+      case 'cancelled':
+        return '#e74c3c';
+      case 'out for delivery':
+        return '#f1c40f';
+      default:
+        return '#95a5a6';
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const options = { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    };
+    return new Date(dateString).toLocaleDateString('en-US', options);
+  };
 
   if (loading) {
     return (
-      <div className="orders-container">
-        <div className="orders-loading">
-          <div className="loading-spinner"></div>
-          <p>Loading your orders...</p>
-        </div>
+      <div className="orders-page">
+        <div className="loading-spinner"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="orders-container">
-        <div className="orders-error">
-          <i className="fas fa-exclamation-circle"></i>
-          <p>{error}</p>
-          <button onClick={() => window.location.reload()}>Try Again</button>
-        </div>
+      <div className="orders-page">
+        <div className="error-message">{error}</div>
       </div>
     );
   }
 
   return (
-    <div className="orders-container">
-      <div className="orders-header">
+    <div className="orders-page">
+      <div className="orders-hero">
         <h1>My Orders</h1>
-        <div className="orders-filter">
-          <button 
-            className={filter === 'all' ? 'active' : ''} 
-            onClick={() => setFilter('all')}
-          >
-            All Orders
-          </button>
-          <button 
-            className={filter === 'processing' ? 'active' : ''} 
-            onClick={() => setFilter('processing')}
-          >
-            Processing
-          </button>
-          <button 
-            className={filter === 'shipped' ? 'active' : ''} 
-            onClick={() => setFilter('shipped')}
-          >
-            Shipped
-          </button>
-          <button 
-            className={filter === 'delivered' ? 'active' : ''} 
-            onClick={() => setFilter('delivered')}
-          >
-            Delivered
-          </button>
-          <button 
-            className={filter === 'cancelled' ? 'active' : ''} 
-            onClick={() => setFilter('cancelled')}
-          >
-            Cancelled
-          </button>
-        </div>
+        <p>Track your orders and view order history</p>
       </div>
 
-      {filteredOrders.length === 0 ? (
-        <div className="orders-empty">
-          <i className="fas fa-shopping-bag"></i>
-          <h2>No Orders Found</h2>
-          <p>You haven't placed any orders yet.</p>
-          <button onClick={() => navigate('/products')}>Start Shopping</button>
-        </div>
-      ) : (
-        <div className="orders-list">
-          {filteredOrders.map(order => (
-            <div key={order._id} className="order-card">
-              <div className="order-header">
-                <div className="order-info">
-                  <h3>Order #{order._id.slice(-6)}</h3>
-                  <span className="order-date">{new Date(order.createdAt).toLocaleDateString()}</span>
-                </div>
-                <span className={`order-status ${getStatusClass(order.status)}`}>
-                  {order.status}
-                </span>
-              </div>
-              
-              <div className="order-items">
-                {order.items.map(item => (
-                  <div key={item._id} className="order-item">
-                    <img src={item.product.image} alt={item.product.name} />
-                    <div className="item-details">
-                      <h4>{item.product.name}</h4>
-                      <p className="item-quantity">Quantity: {item.quantity}</p>
-                      <p className="item-price">${item.price.toFixed(2)}</p>
-                    </div>
+      <div className="orders-container">
+        {orders.length === 0 ? (
+          <div className="no-orders">
+            <i className="fas fa-shopping-bag"></i>
+            <h2>No Orders Yet</h2>
+            <p>Start shopping to see your orders here</p>
+          </div>
+        ) : (
+          <div className="orders-list">
+            {orders.map(order => (
+              <div 
+                key={order._id} 
+                className={`order-card ${selectedOrder?._id === order._id ? 'expanded' : ''}`}
+                onClick={() => setSelectedOrder(selectedOrder?._id === order._id ? null : order)}
+              >
+                <div className="order-header">
+                  <div className="order-info">
+                    <h3>Order #{order._id.slice(-6)}</h3>
+                    <p className="order-date">{formatDate(order.createdAt)}</p>
                   </div>
-                ))}
-              </div>
-              
-              <div className="order-footer">
-                <div className="order-total">
-                  <span>Total Amount:</span>
-                  <strong>${order.totalAmount.toFixed(2)}</strong>
+                  <div className="order-status">
+                    <span 
+                      className="status-badge"
+                      style={{ backgroundColor: getStatusColor(order.status) }}
+                    >
+                      {order.status}
+                    </span>
+                    <span className="order-total">₹{order.totalAmount}</span>
+                  </div>
                 </div>
-                <button className="view-details-btn" onClick={() => navigate(`/orders/${order._id}`)}>
-                  View Details
-                </button>
+
+                {selectedOrder?._id === order._id && (
+                  <div className="order-details">
+                    <div className="delivery-info">
+                      <h4>Delivery Address</h4>
+                      <p>{order.deliveryAddress.street}</p>
+                      <p>{order.deliveryAddress.city}, {order.deliveryAddress.state}</p>
+                      <p>{order.deliveryAddress.zipCode}</p>
+                    </div>
+
+                    <div className="items-list">
+                      <h4>Order Items</h4>
+                      {order.items.map(item => (
+                        <div key={item._id} className="order-item">
+                          <img src={item.product.image} alt={item.product.name} />
+                          <div className="item-details">
+                            <h5>{item.product.name}</h5>
+                            <p>Quantity: {item.quantity}</p>
+                            <p>Price: ₹{item.price}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="order-summary">
+                      <div className="summary-row">
+                        <span>Subtotal</span>
+                        <span>₹{order.subtotal}</span>
+                      </div>
+                      <div className="summary-row">
+                        <span>Delivery Fee</span>
+                        <span>₹{order.deliveryFee}</span>
+                      </div>
+                      {order.discount > 0 && (
+                        <div className="summary-row discount">
+                          <span>Discount</span>
+                          <span>-₹{order.discount}</span>
+                        </div>
+                      )}
+                      <div className="summary-row total">
+                        <span>Total</span>
+                        <span>₹{order.totalAmount}</span>
+                      </div>
+                    </div>
+
+                    {order.status === 'processing' && (
+                      <div className="order-actions">
+                        <button className="cancel-order-btn">
+                          Cancel Order
+                        </button>
+                        <button className="track-order-btn">
+                          Track Order
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
-        </div>
-      )}
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
