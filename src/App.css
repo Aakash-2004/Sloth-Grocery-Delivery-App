@@ -1,110 +1,32 @@
-/* Global Styles */
-:root {
-  --primary-color: #4A90E2;      /* Soothing blue */
-  --secondary-color: #5C6BC0;    /* Deep indigo */
-  --accent-color: #FF6B6B;       /* Soft coral */
-  --text-color: #2C3E50;         /* Dark blue-gray */
-  --light-gray: #F5F7FA;         /* Light blue-gray */
-  --white: #FFFFFF;
-  --success-color: #4CAF50;      /* Green */
-  --warning-color: #FFA726;      /* Orange */
-  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --transition: all 0.3s ease;
-}
-
+/* Global styles */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Poppins', 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  background-color: var(--light-gray);
-  color: var(--text-color);
-  line-height: 1.6;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .App {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideIn {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(0); }
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .navbar {
-    padding: 1rem 2%;
-  }
-
-  .nav-links {
-    display: none;
-  }
-
-  .hero h1 {
-    font-size: 2.5rem;
-  }
-
-  .feature-card {
-    max-width: 100%;
-  }
-
-  .search-bar {
+    min-height: 100vh;
+    display: flex;
     flex-direction: column;
-  }
-
-  .search-bar button {
-    width: 100%;
-  }
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Dashboard styles */
+.delivery-dashboard,
+.store-dashboard {
+    padding: 2rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.dashboard-content {
+    margin-top: 2rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Add more styles as needed */ 
